@@ -1,36 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌳 Welcome to iPlanted: Our Journey to a Greener Future! 🌍
 
-## Getting Started
+🔥 As India faced the hottest summer this year, it's time to take action! In this exciting new series, we're creating iPlanted, a platform where you can mark locations on a map where you've planted a tree, sapling, or seed. Let's make our #ActOfPlanting count and help cool our planet!
 
-First, run the development server:
+🚀 What to Expect:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Building a web app using the latest Next.js (Next.js 14), Tailwind CSS, Shadcn UI, and TypeScript.
+- Utilizing React Leaflet and OpenStreetMap for seamless map handling and display.
+- Step-by-step process for buying and connecting a domain with hosting.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🌱 Join the Movement:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+I invite you to participate by planting something green and adding a marker for it on iPlanted. Let's create a digital map of our collective effort to make the world a greener place!
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Watch the full build process on [YouTube](https://www.youtube.com/playlist?list=PLa9NMvQUMD5cAbfks_vdayAbzxXjyG4ly) ![iPlanted Build Process](https://img.youtube.com/vi/EMXPayfmJE8/mqdefault.jpg)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+🔔 [Subscribe and Hit the Bell Icon](https://www.youtube.com/@tanujpatra) to stay updated with each step of our journey. Together, we can make a difference!
