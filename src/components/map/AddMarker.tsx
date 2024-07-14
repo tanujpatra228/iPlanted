@@ -1,16 +1,18 @@
 import { LatLng } from "leaflet";
 import { useState } from "react";
 import { Circle, Popup, useMapEvents } from "react-leaflet";
+import AddPlantPanel from "../AddPlantPanel";
 
 function AddMarker() {
-    const [position, setPosition] = useState<LatLng>();
+    const [position, setPosition] = useState<LatLng | null>(null);
     const map = useMapEvents({
         click(e) {
-            console.log('ee', e);
             setPosition(e.latlng);
-            map.locate()
         },
     });
+    const handleOpenChange = () => {
+        setPosition(null);
+    }
     return (
         <>
             {
@@ -22,6 +24,7 @@ function AddMarker() {
                     </Circle>
                 )
             }
+            <AddPlantPanel isOpen={Boolean(position)} onOpenChange={handleOpenChange} />
         </>
     )
 }
