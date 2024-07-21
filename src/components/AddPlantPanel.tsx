@@ -1,24 +1,14 @@
 "use client";
-import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle
-} from "@/components/ui/drawer";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-} from "@/components/ui/sheet";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { mediaQuery } from "@/lib/utils";
+import AddPlantForm from "./AddPlantForm";
+import { LatLng } from "leaflet";
 
-function AddPlantPanel({ isOpen, onOpenChange }: AddPlantPanelType) {
+function AddPlantPanel({ isOpen, onOpenChange, position }: AddPlantPanelType) {
     const isDesktop = mediaQuery('(min-width: 768px)');
     const handleOpenChange = (open: boolean) => {
-        onOpenChange();
+        onOpenChange(open);
     }
     
     return (
@@ -27,22 +17,13 @@ function AddPlantPanel({ isOpen, onOpenChange }: AddPlantPanelType) {
                 isDesktop ? (
                     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
                         <SheetContent side="left" className="z-[1000]">
-                            <SheetHeader>
-                                <SheetTitle>Are you absolutely sure?</SheetTitle>
-                                <SheetDescription>
-                                    This action cannot be undone. This will permanently delete your account
-                                    and remove your data from our servers.
-                                </SheetDescription>
-                            </SheetHeader>
+                            <AddPlantForm position={position} className="p-0 mt-2" />
                         </SheetContent>
                     </Sheet>
                 ) : (
                     <Drawer open={isOpen} onOpenChange={handleOpenChange}>
                         <DrawerContent className="z-[1000]">
-                            <DrawerHeader>
-                                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                                <DrawerDescription>This action cannot be undone.</DrawerDescription>
-                            </DrawerHeader>
+                            <AddPlantForm position={position} />
                         </DrawerContent>
                     </Drawer>
                 )
@@ -55,5 +36,6 @@ export default AddPlantPanel;
 
 type AddPlantPanelType = {
     isOpen: boolean;
-    onOpenChange: () => void
+    onOpenChange: (open: boolean) => void;
+    position: LatLng
 }

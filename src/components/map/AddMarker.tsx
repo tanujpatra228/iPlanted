@@ -10,21 +10,23 @@ function AddMarker() {
             setPosition(e.latlng);
         },
     });
-    const handleOpenChange = () => {
-        setPosition(null);
+    const handleOpenChange = (open: boolean) => {
+        if (!open) setPosition(null);
     }
     return (
         <>
             {
                 position && (
-                    <Circle center={position} radius={200}>
-                        <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
-                        </Popup>
-                    </Circle>
+                    <>
+                        <Circle center={position} radius={200}>
+                            <Popup>
+                                A pretty CSS3 popup. <br /> Easily customizable.
+                            </Popup>
+                        </Circle>
+                        <AddPlantPanel isOpen={Boolean(position)} position={position} onOpenChange={handleOpenChange} />
+                    </>
                 )
             }
-            <AddPlantPanel isOpen={Boolean(position)} onOpenChange={handleOpenChange} />
         </>
     )
 }
