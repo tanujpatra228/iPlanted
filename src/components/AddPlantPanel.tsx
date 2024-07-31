@@ -2,7 +2,7 @@
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { mediaQuery } from "@/lib/utils";
-import AddPlantForm from "./AddPlantForm";
+import AddPlantForm from "./forms/AddPlantForm";
 import { LatLng } from "leaflet";
 
 function AddPlantPanel({ isOpen, onOpenChange, position }: AddPlantPanelType) {
