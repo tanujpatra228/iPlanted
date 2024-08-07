@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Z from 'zod';
-import { account, ID } from "@/appwrite/appwriteClient";
 
 const schema = Z.object({
     email: Z.string().email({ message: "Invalid email address" }),
@@ -21,8 +20,14 @@ function RegisterForm() {
     const form = useForm<RegisterFormType>({ resolver: zodResolver(schema) });
     const { formState: { errors } } = form;
     const onSubmit = async (values: RegisterFormType) => {
-        const user = await account.create(ID.unique(), values.email, values.password);
-        console.log('user', user);
+        const res = await fetch('/api/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        });
+        console.log('res', res);
     }
 
     return (
