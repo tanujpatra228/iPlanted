@@ -59,7 +59,7 @@ function RegisterForm() {
                         {errors.password && <p className='text-sm text-red-600'>{errors.password.message}</p>}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="confirmPassword">Confirm Password</Label>
                         <Input id="confirmPassword" type="password" {...form.register("confirmPassword")} />
                         {errors.confirmPassword && <p className='text-sm text-red-600'>{errors.confirmPassword.message}</p>}
                     </div>
