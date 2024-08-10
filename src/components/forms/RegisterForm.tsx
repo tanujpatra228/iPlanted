@@ -1,11 +1,16 @@
 "use client"
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useForm } from "react-hook-form";
+import { useToast } from '@/components/ui/use-toast';
+import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { MouseEvent, useEffect } from 'react';
+import { useForm } from "react-hook-form";
 import * as Z from 'zod';
+import { ToastAction } from '../ui/toast';
 
 const schema = Z.object({
     email: Z.string().email({ message: "Invalid email address" }),
@@ -17,8 +22,11 @@ const schema = Z.object({
 });
 
 function RegisterForm() {
+    const params = useSearchParams();
+    const { toast } = useToast();
     const form = useForm<RegisterFormType>({ resolver: zodResolver(schema) });
     const { formState: { errors } } = form;
+    
     const onSubmit = async (values: RegisterFormType) => {
         const res = await fetch('/api/signup', {
             method: 'POST',
@@ -30,9 +38,40 @@ function RegisterForm() {
         console.log('res', res);
     }
 
+    const handleGoogleLogin = async (event: MouseEvent) => {
+        try {
+            event.preventDefault();
+            await signUpWithGoogle();
+        } catch (error) {
+            console.log('handleGoogleLogin error', error);
+        }
+    }
+
+    const handleGoogleOauthError = () => {
+        try {
+            const error = params.get('error');
+            if (!error) return;
+            
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Google Sign-up failed",
+                description: "There was a problem with your request.",
+                action: <ToastAction altText="Try again" onClick={handleGoogleLogin}>Try again</ToastAction>,
+            });
+        } catch (error) {
+            console.log('handleGoogleOauthError error', error);
+        }
+    }
+
+    useEffect(() => {
+        // Wrapped the error function into setTimeout to solve shadcn toast not working issue
+        const timeout = setTimeout(handleGoogleOauthError, 0);
+        return (() => clearTimeout(timeout))
+    }, []);
+
     return (
         <>
-            <form 
+            <form
                 className="mx-auto grid w-[350px] gap-6"
                 onSubmit={form.handleSubmit(onSubmit)}
             >
@@ -66,7 +105,7 @@ function RegisterForm() {
                     <Button type="submit" className="w-full">
                         Sign Up
                     </Button>
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
                         Sign Up with Google
                     </Button>
                 </div>

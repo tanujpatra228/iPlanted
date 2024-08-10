@@ -7,7 +7,8 @@ import { SESSION_KEY } from "@/helpers";
 export async function POST(request: Request) {
     try {
         const {email, password, name}: any = await request.json();
-        const { account } = await createAdminClient();
+        const userAgent = request.headers.get("User-Agent");
+        const { account } = await createAdminClient(userAgent);
         const user = await account.create(ID.unique(), email, password, name);
         const userSession = await account.createEmailPasswordSession(email, password);
     

@@ -22,11 +22,13 @@ export async function createSessionClient() {
     };
 }
 
-export async function createAdminClient() {
+export async function createAdminClient(userAgent: string | null) {
     const client = new Client()
         .setEndpoint(config.appwriteUrl)
         .setProject(config.appwriteProjectId)
         .setKey(process.env.APPWRITE_API_KEY!);
+
+    if(userAgent) client.setForwardedUserAgent(userAgent);
 
     return {
         get account() {
