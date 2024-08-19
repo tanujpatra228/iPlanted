@@ -10,14 +10,14 @@ export async function GET(request: NextRequest) {
     const userAgent = request.headers.get("User-Agent");
 
     const { account } = await createAdminClient(userAgent);
-    const session = await account.createSession(userId, secret);
+    const userSession = await account.createSession(userId, secret);
 
-    cookies().set(SESSION_KEY, session.secret, {
+    cookies().set(SESSION_KEY, userSession.secret, {
         path: "/",
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax", // "strict"
         secure: true,
+        expires: new Date(userSession.expire)
     });
-
     return NextResponse.redirect(`${request.nextUrl.origin}/map`);
 }

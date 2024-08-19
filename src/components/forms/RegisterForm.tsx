@@ -6,7 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MouseEvent, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import * as Z from 'zod';
@@ -23,19 +23,33 @@ const schema = Z.object({
 
 function RegisterForm() {
     const params = useSearchParams();
+    const router = useRouter();
     const { toast } = useToast();
     const form = useForm<RegisterFormType>({ resolver: zodResolver(schema) });
     const { formState: { errors } } = form;
     
     const onSubmit = async (values: RegisterFormType) => {
-        const res = await fetch('/api/signup', {
+        const response = await fetch('/api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         });
-        console.log('res', res);
+        console.log('response', response);
+        if (response.status === 201) {
+            toast({
+                title: "Signup complete",
+                description: "Happy planting",
+            });
+            router.replace('/map');
+            return;
+        }
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Sign-up failed",
+            description: "There was a problem with your request.",
+        });
     }
 
     const handleGoogleLogin = async (event: MouseEvent) => {
