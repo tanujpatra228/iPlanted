@@ -1,24 +1,18 @@
-import { ID } from "node-appwrite";
 import { createAdminClient } from "@/appwrite/appwrite";
+import { RegisterFormType } from "@/components/forms/RegisterForm";
+import { setSession } from "@/lib/session";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { SESSION_KEY } from "@/helpers";
+import { ID } from "node-appwrite";
 
 export async function POST(request: Request) {
     try {
-        const {email, password, name}: any = await request.json();
+        const {email, password, name}: RegisterFormType = await request.json();
         const userAgent = request.headers.get("User-Agent");
         const { account } = await createAdminClient(userAgent);
         const user = await account.create(ID.unique(), email, password, name);
         const userSession = await account.createEmailPasswordSession(email, password);
     
-        cookies().set(SESSION_KEY, userSession.secret, {
-            path: "/",
-            httpOnly: true,
-            sameSite: "lax",
-            secure: true,
-            expires: new Date(userSession.expire),
-        });
+        setSession(userSession);
 
         return NextResponse.json({
             message: "Signup successful",

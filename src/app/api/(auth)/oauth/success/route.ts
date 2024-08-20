@@ -1,6 +1,7 @@
 
 import { createAdminClient } from "@/appwrite/appwrite";
 import { SESSION_KEY } from "@/helpers";
+import { setSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,12 +13,6 @@ export async function GET(request: NextRequest) {
     const { account } = await createAdminClient(userAgent);
     const userSession = await account.createSession(userId, secret);
 
-    cookies().set(SESSION_KEY, userSession.secret, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "lax", // "strict"
-        secure: true,
-        expires: new Date(userSession.expire)
-    });
+    setSession(userSession);
     return NextResponse.redirect(`${request.nextUrl.origin}/map`);
 }

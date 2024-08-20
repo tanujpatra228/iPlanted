@@ -1,7 +1,6 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { SESSION_KEY } from "@/helpers";
 import { createAdminClient } from "@/appwrite/appwrite";
+import { setSession } from "@/lib/session";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
@@ -10,13 +9,7 @@ export async function POST(request: Request) {
         const { account } = await createAdminClient(userAgent);
         const userSession = await account.createEmailPasswordSession(email, password);
     
-        cookies().set(SESSION_KEY, userSession.secret, {
-            path: "/",
-            httpOnly: true,
-            sameSite: "lax",
-            secure: true,
-            expires: new Date(userSession.expire),
-        });
+        setSession(userSession);
 
         return NextResponse.json({
             message: "Signin successful",

@@ -1,5 +1,6 @@
 import { config } from "@/appwrite/config";
 import { SESSION_KEY } from "@/helpers";
+import { deleteSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import { Client, Account } from "node-appwrite";
 
@@ -55,7 +56,7 @@ export async function deleteCurrentSession(userAgent: string | null) {
     try {
         const { account } = await createSessionClient(userAgent);
         account.deleteSession('current');
-        cookies().delete(SESSION_KEY);
+        deleteSession();
         return {
             success: true
         };

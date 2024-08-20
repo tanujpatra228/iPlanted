@@ -13,6 +13,7 @@ import * as Z from 'zod';
 import { ToastAction } from '../ui/toast';
 
 const schema = Z.object({
+    name: Z.string({message: "Name is required"}),
     email: Z.string().email({ message: "Invalid email address" }),
     password: Z.string().min(6, { message: "Password must be at least 6 characters long" }),
     confirmPassword: Z.string().min(6, { message: "Password must be at least 6 characters long" })
@@ -97,23 +98,33 @@ function RegisterForm() {
                 </div>
                 <div className="grid gap-4">
                     <div className="grid gap-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                            id="name"
+                            type="name"
+                            placeholder="Shyam"
+                            {...form.register("name")}
+                        />
+                        {errors.name && <p className='text-sm text-red-600'>{errors.name.message}</p>}
+                    </div>
+                    <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
-                            placeholder="your@mail.com"
+                            placeholder="your@email.com"
                             {...form.register("email")}
                         />
                         {errors.email && <p className='text-sm text-red-600'>{errors.email.message}</p>}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" {...form.register("password")} />
+                        <Input id="password" type="password" placeholder="******" {...form.register("password")} />
                         {errors.password && <p className='text-sm text-red-600'>{errors.password.message}</p>}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="confirmPassword">Confirm Password</Label>
-                        <Input id="confirmPassword" type="password" {...form.register("confirmPassword")} />
+                        <Input id="confirmPassword" type="password" placeholder="******" {...form.register("confirmPassword")} />
                         {errors.confirmPassword && <p className='text-sm text-red-600'>{errors.confirmPassword.message}</p>}
                     </div>
                     <Button type="submit" className="w-full">
@@ -136,4 +147,4 @@ function RegisterForm() {
 
 export default RegisterForm;
 
-type RegisterFormType = Z.infer<typeof schema>;
+export type RegisterFormType = Z.infer<typeof schema>;
