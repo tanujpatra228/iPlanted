@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/appwrite/appwrite";
 import { setSession } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -10,6 +11,7 @@ export async function POST(request: Request) {
         const userSession = await account.createEmailPasswordSession(email, password);
     
         setSession(userSession);
+        revalidatePath('/map', 'page');
 
         return NextResponse.json({
             message: "Signin successful",

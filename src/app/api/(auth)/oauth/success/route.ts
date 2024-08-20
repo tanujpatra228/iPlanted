@@ -1,8 +1,7 @@
 
 import { createAdminClient } from "@/appwrite/appwrite";
-import { SESSION_KEY } from "@/helpers";
 import { setSession } from "@/lib/session";
-import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -14,5 +13,6 @@ export async function GET(request: NextRequest) {
     const userSession = await account.createSession(userId, secret);
 
     setSession(userSession);
+    revalidatePath('/map', 'page');
     return NextResponse.redirect(`${request.nextUrl.origin}/map`);
 }
