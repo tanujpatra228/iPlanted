@@ -3,30 +3,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
+import { RegisterFormType, signUpSchema } from '@/schema/signUpSchema';
 import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MouseEvent, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import * as Z from 'zod';
 import { ToastAction } from '../ui/toast';
-
-const schema = Z.object({
-    name: Z.string({message: "Name is required"}),
-    email: Z.string().email({ message: "Invalid email address" }),
-    password: Z.string().min(6, { message: "Password must be at least 6 characters long" }),
-    confirmPassword: Z.string().min(6, { message: "Password must be at least 6 characters long" })
-}).refine(data => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"]
-});
 
 function RegisterForm() {
     const params = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
-    const form = useForm<RegisterFormType>({ resolver: zodResolver(schema) });
+    const form = useForm<RegisterFormType>({ resolver: zodResolver(signUpSchema) });
     const { formState: { errors } } = form;
     
     const onSubmit = async (values: RegisterFormType) => {
@@ -146,5 +136,3 @@ function RegisterForm() {
 }
 
 export default RegisterForm;
-
-export type RegisterFormType = Z.infer<typeof schema>;

@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/appwrite/appwrite";
-import { RegisterFormType } from "@/components/forms/RegisterForm";
 import { setSession } from "@/lib/session";
+import { RegisterFormType } from "@/schema/signUpSchema";
 import { NextResponse } from "next/server";
 import { ID } from "node-appwrite";
 

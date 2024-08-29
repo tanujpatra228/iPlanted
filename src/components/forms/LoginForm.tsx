@@ -1,27 +1,22 @@
 "use client"
+import { LoginFormType, loginSchema } from '@/schema/loginSchema';
 import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MouseEvent, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import * as Z from 'zod';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { ToastAction } from '../ui/toast';
 import { useToast } from '../ui/use-toast';
 
-const schema = Z.object({
-    email: Z.string().email({ message: "Invalid email address" }),
-    password: Z.string().min(6, { message: "Password must be at least 6 characters long" }),
-});
-
 function LoginForm() {
     const params = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
-    const form = useForm<LoginFormType>({ resolver: zodResolver(schema) });
+    const form = useForm<LoginFormType>({ resolver: zodResolver(loginSchema) });
     const { formState: { errors } } = form;
     
     const onSubmit = async (values: LoginFormType) => {
@@ -156,5 +151,3 @@ function LoginForm() {
 }
 
 export default LoginForm;
-
-type LoginFormType = Z.infer<typeof schema>;
