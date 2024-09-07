@@ -1,32 +1,44 @@
+"use client"
+import { cn } from "@/lib/utils";
+import { addNewPlantSchema, AddPlantFormType } from "@/schema/newPlantSchama";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LatLng } from "leaflet";
+import { ChangeEvent, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { ChangeEvent, useRef, useState } from "react";
-import { LatLng } from "leaflet";
+import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-    title: z.string().min(2).max(50),
-    image: z.string().optional(),
-})
-
-function AddPlantForm({ position, className, ...rest }: AddPlantFormType) {
+function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
     const imageFieldRef = useRef<HTMLInputElement>(null);
     const imagePreviewRef = useRef<HTMLImageElement>(null);
+    const router = useRouter();
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<AddPlantFormType>({
+        resolver: zodResolver(addNewPlantSchema),
         defaultValues: {
             title: "",
             image: "",
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values, position)
+    async function onSubmit(values: AddPlantFormType) {
+        if (!values.title) return;
+        try {
+            console.log(values, position);
+            const res = await fetch("/api/plants", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: values.title,
+                    coordinates: position,
+                })
+            });
+            const data = await res.json();
+            console.log('data', data);
+        } catch (error) {
+            console.log('error', error);
+        }
     }
 
     function showImagePreview(e: ChangeEvent<HTMLInputElement>) {
@@ -40,6 +52,22 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormType) {
             }
         }
     }
+
+    return (
+        <div className={cn("p-4 h-full flex justify-center items-center", className)} {...rest}>
+            <div className="py-8 flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+                <div className="flex flex-col items-center gap-1 text-center">
+                    <h3 className="text-2xl font-bold tracking-tight">
+                        Signin Required
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        Start growing your plant collection by signing in.
+                    </p>
+                    <Button className="mt-4" onClick={() => router.push('/login')}>Signin</Button>
+                </div>
+            </div>
+        </div>
+    )
 
     return (
         <div className={cn("p-4", className)} {...rest}>
@@ -78,6 +106,6 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormType) {
 
 export default AddPlantForm;
 
-type AddPlantFormType = {
+type AddPlantFormPropsType = {
     position: LatLng;
 } & JSX.IntrinsicElements["div"];

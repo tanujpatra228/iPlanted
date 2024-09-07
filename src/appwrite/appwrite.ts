@@ -43,6 +43,10 @@ export async function createAdminClient(userAgent: string | null) {
 // Get Current loggedin user
 export async function getCurrentUser() {
     try {
+        const session = cookies().get(SESSION_KEY);
+        if (!session || !session.value) {
+            return null;
+        }
         const { account } = await createSessionClient('');
         return await account.get();
     } catch (error: any) {
