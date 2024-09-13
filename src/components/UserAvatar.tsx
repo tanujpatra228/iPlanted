@@ -1,10 +1,11 @@
 "use client"
+import { useAuth } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Models } from "node-appwrite";
 
-function UserAvatar({ sessionUser }: UserAvatarProps) {
+function UserAvatar({ }: UserAvatarProps) {
+    const {user: sessionUser} = useAuth();
     const router = useRouter();
     async function logOut() {
         const res = await fetch(`/api/logout`, {
@@ -43,6 +44,4 @@ function UserAvatar({ sessionUser }: UserAvatarProps) {
 
 export default UserAvatar;
 
-type UserAvatarProps = {
-    sessionUser: Models.User<Models.Preferences> | null;
-}
+type UserAvatarProps = {}

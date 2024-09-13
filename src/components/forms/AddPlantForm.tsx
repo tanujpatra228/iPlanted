@@ -9,11 +9,13 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
     const imageFieldRef = useRef<HTMLInputElement>(null);
     const imagePreviewRef = useRef<HTMLImageElement>(null);
     const router = useRouter();
+    const { isAuth } = useAuth();
 
     const form = useForm<AddPlantFormType>({
         resolver: zodResolver(addNewPlantSchema),
@@ -27,7 +29,7 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
         if (!values.title) return;
         try {
             console.log(values, position);
-            const res = await fetch("/api/plants", {
+            const res = await fetch("/api/plant", {
                 method: "POST",
                 body: JSON.stringify({
                     title: values.title,
@@ -53,21 +55,23 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
         }
     }
 
-    return (
-        <div className={cn("p-4 h-full flex justify-center items-center", className)} {...rest}>
-            <div className="py-8 flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
-                <div className="flex flex-col items-center gap-1 text-center">
-                    <h3 className="text-2xl font-bold tracking-tight">
-                        Signin Required
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                        Start growing your plant collection by signing in.
-                    </p>
-                    <Button className="mt-4" onClick={() => router.push('/login')}>Signin</Button>
+    if(!isAuth){
+        return (
+            <div className={cn("p-4 h-full flex justify-center items-center", className)} {...rest}>
+                <div className="py-8 flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+                    <div className="flex flex-col items-center gap-1 text-center">
+                        <h3 className="text-2xl font-bold tracking-tight">
+                            Signin Required
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            Start growing your plant collection by signing in.
+                        </p>
+                        <Button className="mt-4" onClick={() => router.push('/login')}>Signin</Button>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 
     return (
         <div className={cn("p-4", className)} {...rest}>

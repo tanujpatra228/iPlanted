@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
             plantedBy: user.$id,
             location: {
                 type: 'Point',
-                coordinates: coordinates
+                coordinates: [coordinates?.lat, coordinates?.lng]
             }
         });
         await plant.save();
