@@ -18,11 +18,7 @@ function AddMarker() {
             {
                 position && (
                     <>
-                        <Circle center={position} radius={200}>
-                            <Popup>
-                                A pretty CSS3 popup. <br /> Easily customizable.
-                            </Popup>
-                        </Circle>
+                        <Circle center={position} radius={3} color="#4cff33" />
                         <AddPlantPanel isOpen={Boolean(position)} position={position} onOpenChange={handleOpenChange} />
                     </>
                 )

@@ -1,18 +1,47 @@
 "use client"
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { Circle, MapContainer, TileLayer } from 'react-leaflet';
 import AddMarker from '@/components/map/AddMarker';
+import { getUserCoordinates } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
 function MapWrapper() {
+    const liveLocationQuery = useQuery({
+        queryKey: ['liveLovation'],
+        queryFn: getUserCoordinates,
+        refetchInterval: 2000
+    });
+    const coordinates = liveLocationQuery.data instanceof GeolocationPositionError ? undefined : liveLocationQuery.data;
+
+    if (liveLocationQuery.isLoading) {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center">
+                Getting your current location
+            </div>
+        )
+    }
+
+    if (!coordinates) {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center">
+                Location access is required
+            </div>
+        )
+    }
 
     return (
         <div>
             {
-                <MapContainer className="h-screen" center={[21.168128, 72.7973888]} zoom={13} scrollWheelZoom={false}>
+                <MapContainer className="h-screen" center={coordinates} zoom={20} scrollWheelZoom={false}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
+                    {/* User Location Marker */}
+                    <Circle center={coordinates} radius={5} />
+                    {/* Plantable Area */}
+                    <Circle center={coordinates} radius={150} color="#3388ff50" fill={false} />
+
                     <AddMarker />
                 </MapContainer>
             }
