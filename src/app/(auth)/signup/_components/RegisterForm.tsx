@@ -1,65 +1,46 @@
 "use client"
-import { LoginFormType, loginSchema } from '@/schema/loginSchema';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { RegisterFormType, signUpSchema } from '@/schema/signUpSchema';
 import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MouseEvent, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { ToastAction } from '../ui/toast';
-import { useToast } from '../ui/use-toast';
+import { ToastAction } from '../../../../components/ui/toast';
+import { PasswordInput } from '@/app/(auth)/_components/PasswordInput';
 
-function LoginForm() {
+function RegisterForm() {
     const params = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
-    const form = useForm<LoginFormType>({ resolver: zodResolver(loginSchema) });
+    const form = useForm<RegisterFormType>({ resolver: zodResolver(signUpSchema) });
     const { formState: { errors } } = form;
     
-    const onSubmit = async (values: LoginFormType) => {
-        // Login API
-        const response = await fetch('/api/login', {
+    const onSubmit = async (values: RegisterFormType) => {
+        const response = await fetch('/api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         });
-        const data = await response.json();
-        
-        // Handle Success
-        if (response.ok) {
+        console.log('response', response);
+        if (response.status === 201) {
             toast({
-                title: "Welcome Back",
+                title: "Signup complete",
                 description: "Happy planting",
             });
             router.replace('/map');
             return;
         }
-
-        // Handle Error
-        let errorDetails = {};
-        switch (response.status) {
-            case 401:
-                errorDetails = {
-                    title: "Uh oh! Your credentials are wrong.",
-                    description: data?.error?.message || "Email or password are incorrect",
-                };
-                break;
-        
-            default:
-                errorDetails = {
-                    title: "Uh oh! Something went wrong.",
-                    description: data?.error?.message || "There was a problem with your request.",
-                };
-                break;
-        }
         toast({
             variant: "destructive",
-            ...errorDetails,
+            title: "Uh oh! Sign-up failed",
+            description: "There was a problem with your request.",
         });
     }
 
@@ -101,48 +82,53 @@ function LoginForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <div className="grid gap-2 text-center">
-                    <h1 className="text-3xl font-bold">Login</h1>
+                    <h1 className="text-3xl font-bold">Sign Up</h1>
                     <p className="text-balance text-muted-foreground">
-                        Enter your email below to login to your account
+                        Enter your email below to Sign up
                     </p>
                 </div>
                 <div className="grid gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                            id="name"
+                            type="name"
+                            placeholder="Name"
+                            {...form.register("name")}
+                        />
+                        {errors.name && <p className='text-sm text-red-600'>{errors.name.message}</p>}
+                    </div>
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
-                            placeholder="m@example.com"
-                            tabIndex={1}
+                            placeholder="mail@domain.com"
                             {...form.register("email")}
                         />
                         {errors.email && <p className='text-sm text-red-600'>{errors.email.message}</p>}
                     </div>
                     <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            <Link
-                                href="/forgot-password"
-                                className="ml-auto inline-block text-sm underline"
-                                tabIndex={6}
-                            >
-                                Forgot your password?
-                            </Link>
-                        </div>
-                        <Input id="password" type="password" tabIndex={2} {...form.register("password")} />
+                        <Label htmlFor="password">Password</Label>
+                        <PasswordInput id="password" type="password" placeholder="******" {...form.register("password")} />
                         {errors.password && <p className='text-sm text-red-600'>{errors.password.message}</p>}
                     </div>
-                    <Button type="submit" className="w-full" tabIndex={3}>
-                        Login
+                    <div className="grid gap-2">
+                        <Label htmlFor="confirmPassword">Confirm Password</Label>
+                        <PasswordInput id="confirmPassword" type="password" placeholder="******" {...form.register("confirmPassword")} />
+                        {errors.confirmPassword && <p className='text-sm text-red-600'>{errors.confirmPassword.message}</p>}
+                    </div>
+                    <Button type="submit" className="w-full">
+                        Sign Up
                     </Button>
-                    <Button variant="outline" className="w-full" tabIndex={4} onClick={handleGoogleLogin}>
-                        Login with Google
+                    <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+                        Sign Up with Google
                     </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/signup" className="underline" tabIndex={5}>
-                        Sign up
+                    Already have an account?{" "}
+                    <Link href="/login" className="underline">
+                        Login
                     </Link>
                 </div>
             </form>
@@ -150,4 +136,4 @@ function LoginForm() {
     )
 }
 
-export default LoginForm;
+export default RegisterForm;
