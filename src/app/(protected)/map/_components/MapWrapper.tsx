@@ -1,9 +1,10 @@
 "use client"
-import "leaflet/dist/leaflet.css";
-import { Circle, MapContainer, TileLayer } from 'react-leaflet';
-import AddMarker from '@/components/map/AddMarker';
 import { getUserCoordinates } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer } from 'react-leaflet';
+import AddMarker from '../_components/AddMarker';
+import UserLocationMarker from "./UserLocationMarker";
 
 function MapWrapper() {
     const liveLocationQuery = useQuery({
@@ -37,10 +38,7 @@ function MapWrapper() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {/* User Location Marker */}
-                    <Circle center={coordinates} radius={5} />
-                    {/* Plantable Area */}
-                    <Circle center={coordinates} radius={150} color="#3388ff50" fill={false} />
+                    <UserLocationMarker coordinates={coordinates} />
 
                     <AddMarker />
                 </MapContainer>

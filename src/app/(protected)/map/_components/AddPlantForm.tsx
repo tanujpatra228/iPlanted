@@ -3,41 +3,39 @@ import { cn } from "@/lib/utils";
 import { addNewPlantSchema, AddPlantFormType } from "@/schema/newPlantSchama";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LatLng } from "leaflet";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Input } from '../ui/input';
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useMutation } from "@tanstack/react-query";
+import { addNewPlant } from "@/services/plant.services";
+import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 
-function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
+function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPlantFormPropsType) {
     const imageFieldRef = useRef<HTMLInputElement>(null);
     const imagePreviewRef = useRef<HTMLImageElement>(null);
     const router = useRouter();
     const { isAuth } = useAuth();
-
+    const { toast } = useToast();
+    const addPlantMutation = useMutation({ mutationKey: ['addPlant'], mutationFn: addNewPlant });
+    
     const form = useForm<AddPlantFormType>({
         resolver: zodResolver(addNewPlantSchema),
         defaultValues: {
             title: "",
-            image: "",
+            coordinates: { lat: position.lat, lng: position.lng },
+            image: null,
+            notes: "",
         },
     });
 
     async function onSubmit(values: AddPlantFormType) {
-        if (!values.title) return;
         try {
-            console.log(values, position);
-            const res = await fetch("/api/plant", {
-                method: "POST",
-                body: JSON.stringify({
-                    title: values.title,
-                    coordinates: position,
-                })
-            });
-            const data = await res.json();
-            console.log('data', data);
+            const response = await addPlantMutation.mutateAsync(values);
         } catch (error) {
             console.log('error', error);
         }
@@ -47,13 +45,36 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
         if (!e.target?.files) return;
         const file = e.target.files[0];
         if (file) {
+            form.setValue('image', file);
             const url = URL.createObjectURL(file);
-            form.setValue("image", url);
             if (imagePreviewRef.current?.src) {
                 imagePreviewRef.current.src = url;
             }
         }
     }
+
+    useEffect(() => {
+        // Show tost message on mutation change
+        if (addPlantMutation.isPending) {
+            toast({
+                title: "Planting...",
+                description: "Saving Plant Info",
+            });
+        } else if (addPlantMutation.isSuccess) {
+            toast({
+                variant: "success",
+                title: "Plantd",
+                description: "Thank You!",
+            });
+            onSubmitCompleted();
+        } else if (addPlantMutation.isError) {
+            toast({
+                variant: "destructive",
+                title: "Failed",
+                description: "Something went wrong, Please try again",
+            });
+        }
+    }, [addPlantMutation.isPending, addPlantMutation.isSuccess, addPlantMutation.isError]);
 
     if(!isAuth){
         return (
@@ -77,7 +98,7 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
         <div className={cn("p-4", className)} {...rest}>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <label htmlFor="image" className="block w-full h-40 bg-slate-300 rounded-md">
+                    <label htmlFor="image" className={`block w-full h-40 ${!!form.formState.errors?.image ? 'bg-destructive' : ''} bg-slate-200 rounded-md`}>
                         <img src="" alt="Upload Plant Image" className="w-full h-full object-cover flex justify-center items-center" ref={imagePreviewRef} />
                         <input
                             type="file"
@@ -101,7 +122,22 @@ function AddPlantForm({ position, className, ...rest }: AddPlantFormPropsType) {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Submit</Button>
+                    <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Notes</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Anything that is special to you..." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" disabled={addPlantMutation.isPending}>
+                        {addPlantMutation.isPending ? 'Planting...' : 'Plant'}
+                    </Button>
                 </form>
             </Form>
         </div>
@@ -112,4 +148,5 @@ export default AddPlantForm;
 
 type AddPlantFormPropsType = {
     position: LatLng;
+    onSubmitCompleted: () => void;
 } & JSX.IntrinsicElements["div"];

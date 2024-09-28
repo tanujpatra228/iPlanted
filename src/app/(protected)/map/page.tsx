@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import dynamic from 'next/dynamic';
-const MapWrapper = dynamic(() => import('@/components/map/MapWrapper'), { ssr: false });
+const MapWrapper = dynamic(() => import('./_components/MapWrapper'), { ssr: false });
 
 function Map() {
 

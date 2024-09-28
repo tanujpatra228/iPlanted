@@ -1,29 +1,31 @@
 "use client";
-import { Drawer, DrawerContent } from "@/components/ui/drawer";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { mediaQuery } from "@/lib/utils";
-import AddPlantForm from "./forms/AddPlantForm";
 import { LatLng } from "leaflet";
+import AddPlantForm from "./AddPlantForm";
 
 function AddPlantPanel({ isOpen, onOpenChange, position }: AddPlantPanelType) {
     const isDesktop = mediaQuery('(min-width: 768px)');
     const handleOpenChange = (open: boolean) => {
         onOpenChange(open);
     }
-    
+
     return (
         <>
             {
                 isDesktop ? (
                     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
                         <SheetContent side="left" className="z-[1000]">
-                            <AddPlantForm position={position} className="p-0 mt-2" />
+                            <SheetTitle title="Add Plant" />
+                            <AddPlantForm position={position} className="p-0 mt-2" onSubmitCompleted={() => handleOpenChange(false)} />
                         </SheetContent>
                     </Sheet>
                 ) : (
                     <Drawer open={isOpen} onOpenChange={handleOpenChange}>
                         <DrawerContent className="z-[1000]">
-                            <AddPlantForm position={position} />
+                            <DrawerTitle title="Add Plant" />
+                            <AddPlantForm position={position} onSubmitCompleted={() => handleOpenChange(false)} />
                         </DrawerContent>
                     </Drawer>
                 )

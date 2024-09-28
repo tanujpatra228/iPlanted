@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
 import { useState } from "react";
-import { Circle, Popup, useMapEvents } from "react-leaflet";
-import AddPlantPanel from "../AddPlantPanel";
+import { Circle, useMapEvents } from "react-leaflet";
+import AddPlantPanel from "./AddPlantPanel";
 
 function AddMarker() {
     const [position, setPosition] = useState<LatLng | null>(null);
