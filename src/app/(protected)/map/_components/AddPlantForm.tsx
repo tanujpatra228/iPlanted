@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addNewPlant } from "@/services/plant.services";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,6 +21,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
     const router = useRouter();
     const { isAuth } = useAuth();
     const { toast } = useToast();
+    const queryClient = useQueryClient();
     const addPlantMutation = useMutation({ mutationKey: ['addPlant'], mutationFn: addNewPlant });
     
     const form = useForm<AddPlantFormType>({
@@ -66,6 +67,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
                 title: "Plantd",
                 description: "Thank You!",
             });
+            queryClient.refetchQueries({ queryKey: ['nearByPlants'] });
             onSubmitCompleted();
         } else if (addPlantMutation.isError) {
             toast({

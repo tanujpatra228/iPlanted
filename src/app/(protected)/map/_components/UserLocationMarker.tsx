@@ -14,9 +14,9 @@ function UserLocationMarker({ coordinates }: { coordinates: LatLngTuple }) {
     return (
         <>
             {/* User Location Marker */}
-            <Circle center={coordinates} radius={5} />
+            <Circle center={[lat, lng]} radius={5} />
             {/* Plantable Area */}
-            <Circle center={coordinates} radius={150} color="#3388ff50" fill={false} />
+            <Circle center={[lat, lng]} radius={150} color="#3388ff50" fill={false} />
         </>
     )
 }

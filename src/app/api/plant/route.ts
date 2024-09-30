@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
             notes: notes,
             location: {
                 type: 'Point',
-                coordinates: [coordinates?.lat, coordinates?.lng]
+                coordinates: [coordinates?.lng, coordinates?.lat]
             }
         });
         await plant.save();
@@ -44,13 +44,29 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        const lng = request.nextUrl.searchParams.get('lng');
+        const lat = request.nextUrl.searchParams.get('lat');
+        // Lat Lng i required
+        if(!lng || !lat) return NextResponse.json({ success: false, message: "Coordinates required", lnglat: [lng, lat] }, { status: 404 });
+        
+        const center = [Number(lng), Number(lat)];
+        const earthRadiusInKm = 6371; // approx
+        const searchRadius = 1.3;
+        const searchArea = searchRadius/earthRadiusInKm;
+
         await dbConnect();
-        const plants = await Plant.find({}, '-__v');
-        return NextResponse.json({ plants: plants }, { status: 200 });
+        const plants = await Plant.find({
+            location: { 
+                $geoWithin: { 
+                    $centerSphere: [ center, searchArea ]
+                }
+            }
+        }, '_id, image, location');
+        return NextResponse.json({ success: true, plants: plants }, { status: 200 });
     } catch (error: any) {
-        console.log('plant API error', error);
-        return NextResponse.json({ error: error?.message }, { status: 500 });
+        console.log('nearby plant API error', error);
+        return NextResponse.json({ success: false, error: true, message: error?.message }, { status: 500 });
     }
 }

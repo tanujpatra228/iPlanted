@@ -1,10 +1,11 @@
 "use client"
-import { getUserCoordinates } from "@/lib/utils";
+import { getUserCoordinates } from "@/services/location.service";
 import { useQuery } from "@tanstack/react-query";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import AddMarker from '../_components/AddMarker';
 import UserLocationMarker from "./UserLocationMarker";
+import { NearByPlants } from "./NearByPlants";
 
 function MapWrapper() {
     const liveLocationQuery = useQuery({
@@ -39,6 +40,8 @@ function MapWrapper() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     {!!coordinates && <UserLocationMarker coordinates={coordinates} />}
+                    
+                    {!!coordinates && <NearByPlants coordinates={coordinates} />}
 
                     <AddMarker />
                 </MapContainer>
