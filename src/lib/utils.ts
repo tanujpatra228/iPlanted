@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { LatLngExpression } from "leaflet";
+import { LatLngTuple } from "leaflet";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -13,14 +13,14 @@ export function mediaQuery(query: string): boolean {
 
 /**
  * Gets the coordinates from javascript navigator API
- * @returns {LatLngExpression | GeolocationPositionError}
+ * @returns {LatLngTuple | GeolocationPositionError}
  */
-export function getUserCoordinates(): Promise<LatLngExpression | GeolocationPositionError> {
+export function getUserCoordinates(): Promise<LatLngTuple | GeolocationPositionError> {
   return new Promise((resolve, reject) => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const coordinates = [position.coords.latitude, position.coords.longitude] as LatLngExpression;
+          const coordinates = [position.coords.latitude, position.coords.longitude] as LatLngTuple;
           resolve(coordinates);
         },
         (error) => {

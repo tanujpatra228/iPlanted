@@ -1,14 +1,15 @@
 "use client"
-import { LatLngLiteral, LatLngTuple } from "leaflet";
+import { LatLngTuple } from "leaflet";
 import { useEffect } from "react";
 import { Circle, useMap } from "react-leaflet";
 
-function UserLocationMarker({ coordinates }: { coordinates: LatLngLiteral | LatLngTuple }) {
+function UserLocationMarker({ coordinates }: { coordinates: LatLngTuple }) {
     const map = useMap();
+    const [lat, lng] = coordinates;
 
     useEffect(() => {
         map.locate();
-    }, [coordinates]);
+    }, [lat, lng]);
 
     return (
         <>
