@@ -53,17 +53,17 @@ export async function GET(request: NextRequest) {
         
         const center = [Number(lng), Number(lat)];
         const earthRadiusInKm = 6371; // approx
-        const searchRadius = 1.3;
+        const searchRadius = 1;
         const searchArea = searchRadius/earthRadiusInKm;
 
         await dbConnect();
         const plants = await Plant.find({
-            location: { 
-                $geoWithin: { 
-                    $centerSphere: [ center, searchArea ]
+            location: {
+                $geoWithin: {
+                    $centerSphere: [center, searchArea]
                 }
             }
-        }, '_id, image, location');
+        });
         return NextResponse.json({ success: true, plants: plants }, { status: 200 });
     } catch (error: any) {
         console.log('nearby plant API error', error);

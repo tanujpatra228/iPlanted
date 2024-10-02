@@ -47,6 +47,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
         const file = e.target.files[0];
         if (file) {
             form.setValue('image', file);
+            form.clearErrors("image");
             const url = URL.createObjectURL(file);
             if (imagePreviewRef.current?.src) {
                 imagePreviewRef.current.src = url;
@@ -78,6 +79,9 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
         }
     }, [addPlantMutation.isPending, addPlantMutation.isSuccess, addPlantMutation.isError]);
 
+    console.log('form.formState.errors.image', form.formState.errors?.image?.message);
+    
+
     if(!isAuth){
         return (
             <div className={cn("p-4 h-full flex justify-center items-center", className)} {...rest}>
@@ -100,17 +104,25 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
         <div className={cn("p-4", className)} {...rest}>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <label htmlFor="image" className={`block w-full h-40 ${!!form.formState.errors?.image ? 'bg-destructive' : ''} bg-slate-200 rounded-md`}>
-                        <img src="" alt="Upload Plant Image" className="w-full h-full object-cover flex justify-center items-center" ref={imagePreviewRef} />
-                        <input
-                            type="file"
-                            name="image"
-                            id="image"
-                            className="hidden"
-                            ref={imageFieldRef}
-                            onChange={showImagePreview}
-                        />
-                    </label>
+                    <div>
+                        <label htmlFor="image" className={`block w-full h-40 ${!!form.formState.errors?.image ? 'bg-destructive' : ''} bg-slate-200 rounded-md`}>
+                            <img src="" alt="Upload Plant Image" className="w-full h-full object-cover flex justify-center items-center" ref={imagePreviewRef} />
+                            <input
+                                type="file"
+                                name="image"
+                                id="image"
+                                className="hidden"
+                                ref={imageFieldRef}
+                                onChange={showImagePreview}
+                            />
+                        </label>
+                        {
+                            // Image error message
+                            (!!form.formState.errors?.image?.message && typeof form.formState.errors?.image?.message === "string")
+                            &&
+                            <p className="text-sm font-medium text-destructive">{form.formState.errors?.image?.message}</p>
+                        }
+                    </div>
                     <FormField
                         control={form.control}
                         name="title"

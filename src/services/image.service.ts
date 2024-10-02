@@ -14,7 +14,7 @@ export async function uploadImage(file: Buffer): Promise<string> {
                     folder: 'iplanted',
                     format: 'webp',
                     transformation: {
-                        width: 500,
+                        width: 700,
                         quality: 'auto'
                     },
                     media_metadata: false

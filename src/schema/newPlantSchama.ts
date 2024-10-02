@@ -7,6 +7,7 @@ export const addNewPlantSchema = z.object({
     title: z.string().min(2).max(50),
     image: z
         .any()
+        .refine((file) => !file, `Image is required`)
         .refine((file) => file?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
         .refine(
             (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),

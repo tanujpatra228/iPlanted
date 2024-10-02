@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import AddMarker from '../_components/AddMarker';
-import UserLocationMarker from "./UserLocationMarker";
 import { NearByPlants } from "./NearByPlants";
+import UserLocationMarker from "./UserLocationMarker";
 
 function MapWrapper() {
     const liveLocationQuery = useQuery({
@@ -41,7 +41,7 @@ function MapWrapper() {
                     />
                     {!!coordinates && <UserLocationMarker coordinates={coordinates} />}
                     
-                    {!!coordinates && <NearByPlants coordinates={coordinates} />}
+                    <NearByPlants coordinates={coordinates} />
 
                     <AddMarker />
                 </MapContainer>
