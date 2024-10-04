@@ -16,11 +16,12 @@ const plantIcon = new Icon({
 export function NearByPlants({ coordinates }: { coordinates: LatLngTuple }) {
     const [lat, lng] = coordinates;
     const nearByPlantsQuery = useQuery({
-        queryKey: ['nearByPlants', [lat.toFixed(7), lng.toFixed(7)]],
+        queryKey: ['nearByPlants', [lat.toFixed(5), lng.toFixed(5)]],
         enabled: !!coordinates,
         queryFn: getNearByPlants,
         refetchOnReconnect: true,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60
     });
     const { plants } = nearByPlantsQuery.isSuccess && nearByPlantsQuery.data.success ? nearByPlantsQuery.data : {plants: [] as PlantType[]};
 
