@@ -1,4 +1,3 @@
-import { QueryFunction } from "@tanstack/react-query";
 import { LatLngTuple } from "leaflet";
 
 /**
@@ -25,12 +24,4 @@ export function getUserCoordinates(): Promise<LatLngTuple | GeolocationPositionE
             reject(error as GeolocationPositionError);
         }
     });
-}
-
-export const getNearByPlants:QueryFunction = async ({ queryKey, signal }): Promise<Record<string, any>[]> => {
-    const [_, coordinates] = queryKey as [string, LatLngTuple];
-    const [lat, lng] = coordinates;
-    const res = await fetch(`api/plant?lng=${lng}&lat=${lat}`, { signal });
-    const result = await res.json();
-    return result;
 }

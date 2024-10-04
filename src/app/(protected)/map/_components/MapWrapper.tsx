@@ -11,7 +11,7 @@ function MapWrapper() {
     const liveLocationQuery = useQuery({
         queryKey: ['liveLovation'],
         queryFn: getUserCoordinates,
-        refetchInterval: 5000
+        refetchInterval: 10000
     });
     const coordinates = liveLocationQuery.data instanceof GeolocationPositionError ? undefined : liveLocationQuery.data;
 
@@ -34,7 +34,7 @@ function MapWrapper() {
     return (
         <div>
             {
-                <MapContainer className="h-screen" center={coordinates} zoom={20} scrollWheelZoom={false}>
+                <MapContainer className="h-screen" center={coordinates} zoom={20}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -1,10 +1,10 @@
 import { PlantType } from "@/model/Plant";
-import { getNearByPlants } from "@/services/location.service";
+import { getNearByPlants } from "@/services/plant.services";
 import { useQuery } from "@tanstack/react-query";
 import { Icon, LatLngTuple } from "leaflet";
+import Image from "next/image";
 import { Marker, Popup } from "react-leaflet";
 import plantIconSvg from "/public/plant-icon.svg";
-import Image from "next/image";
 
 const plantIcon = new Icon({
     iconUrl: plantIconSvg.src,
@@ -14,20 +14,22 @@ const plantIcon = new Icon({
 });
 
 export function NearByPlants({ coordinates }: { coordinates: LatLngTuple }) {
+    const [lat, lng] = coordinates;
     const nearByPlantsQuery = useQuery({
-        queryKey: ['nearByPlants', coordinates],
+        queryKey: ['nearByPlants', [lat.toFixed(7), lng.toFixed(7)]],
         enabled: !!coordinates,
         queryFn: getNearByPlants,
         refetchOnReconnect: true,
         refetchOnWindowFocus: false
     });
-    const { plants } = nearByPlantsQuery.data ? nearByPlantsQuery.data as { plants: PlantType[] } : { plants: [] };
+    const { plants } = nearByPlantsQuery.isSuccess && nearByPlantsQuery.data.success ? nearByPlantsQuery.data : {plants: [] as PlantType[]};
+
     if (nearByPlantsQuery.isLoading) return null;
 
     return (
         <>
             {
-                plants.map((plant: PlantType, i: number) => {
+                plants.map((plant, i: number) => {
                     const [lng, lat]: LatLngTuple = plant?.location?.coordinates || [];
                     return (
                         <Marker key={i} position={[lat, lng]} icon={plantIcon}>
