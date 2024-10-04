@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { OAuthProvider } from "node-appwrite";
 
 export async function signUpWithGoogle() {
-    const origin = headers().get("origin");
+    const origin = process.env.NEXT_SITE_URL || headers().get("origin");
     const userAgent = headers().get("User-Agent");
 	const { account } = await createAdminClient(userAgent);
 
