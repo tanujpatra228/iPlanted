@@ -11,7 +11,7 @@ function MapWrapper() {
     const liveLocationQuery = useQuery({
         queryKey: ['liveLovation'],
         queryFn: getUserCoordinates,
-        refetchInterval: 10000
+        refetchInterval: 5000
     });
     const coordinates = liveLocationQuery.data instanceof GeolocationPositionError ? undefined : liveLocationQuery.data;
 

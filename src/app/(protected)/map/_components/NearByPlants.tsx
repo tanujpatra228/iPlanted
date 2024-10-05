@@ -5,6 +5,8 @@ import { Icon, LatLngTuple } from "leaflet";
 import Image from "next/image";
 import { Marker, Popup } from "react-leaflet";
 import plantIconSvg from "/public/plant-icon.svg";
+import { useRef } from "react";
+import { fetchNearByPlants } from "@/services/location.service";
 
 const plantIcon = new Icon({
     iconUrl: plantIconSvg.src,
@@ -15,14 +17,21 @@ const plantIcon = new Icon({
 
 export function NearByPlants({ coordinates }: { coordinates: LatLngTuple }) {
     const [lat, lng] = coordinates;
+    const coordinatesRef = useRef<null | LatLngTuple>(null);
+    const fetchPlants = fetchNearByPlants(coordinatesRef.current, coordinates);
     const nearByPlantsQuery = useQuery({
-        queryKey: ['nearByPlants', [lat.toFixed(5), lng.toFixed(5)]],
-        enabled: !!coordinates,
+        queryKey: ['nearByPlants', [lat, lng]],
+        enabled: fetchPlants,
         queryFn: getNearByPlants,
         refetchOnReconnect: true,
         refetchOnWindowFocus: false,
-        staleTime: 1000 * 60
+        staleTime: 1000 * 60,
     });
+
+    if (fetchPlants && nearByPlantsQuery.isFetched) {
+        coordinatesRef.current = coordinates;
+    }
+
     const { plants } = nearByPlantsQuery.isSuccess && nearByPlantsQuery.data.success ? nearByPlantsQuery.data : {plants: [] as PlantType[]};
 
     if (nearByPlantsQuery.isLoading) return null;
