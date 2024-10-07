@@ -8,7 +8,7 @@ function UserLocationMarker({ coordinates }: { coordinates: LatLngTuple }) {
     const [lat, lng] = coordinates;
 
     useEffect(() => {
-        map.locate();
+        map.flyTo([lat, lng]);
     }, [lat, lng]);
 
     return (

@@ -3,10 +3,9 @@ import { getNearByPlants } from "@/services/plant.services";
 import { useQuery } from "@tanstack/react-query";
 import { Icon, LatLngTuple } from "leaflet";
 import Image from "next/image";
+import React from "react";
 import { Marker, Popup } from "react-leaflet";
 import plantIconSvg from "/public/plant-icon.svg";
-import { useRef } from "react";
-import { fetchNearByPlants } from "@/services/location.service";
 
 const plantIcon = new Icon({
     iconUrl: plantIconSvg.src,
@@ -15,22 +14,16 @@ const plantIcon = new Icon({
     popupAnchor: [0, -25]
 });
 
-export function NearByPlants({ coordinates }: { coordinates: LatLngTuple }) {
-    const [lat, lng] = coordinates;
-    const coordinatesRef = useRef<null | LatLngTuple>(null);
-    const fetchPlants = fetchNearByPlants(coordinatesRef.current, coordinates);
+function NearByPlants({ lat, lng }: { lat: number, lng: number }) {
+    const coordinates = [lat, lng] as LatLngTuple;
     const nearByPlantsQuery = useQuery({
-        queryKey: ['nearByPlants', [lat, lng]],
-        enabled: fetchPlants,
+        queryKey: ['nearByPlants', coordinates],
+        enabled: !!(lat && lng),
         queryFn: getNearByPlants,
         refetchOnReconnect: true,
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60,
     });
-
-    if (fetchPlants && nearByPlantsQuery.isFetched) {
-        coordinatesRef.current = coordinates;
-    }
 
     const { plants } = nearByPlantsQuery.isSuccess && nearByPlantsQuery.data.success ? nearByPlantsQuery.data : {plants: [] as PlantType[]};
 
@@ -53,3 +46,4 @@ export function NearByPlants({ coordinates }: { coordinates: LatLngTuple }) {
         </>
     );
 }
+export default React.memo(NearByPlants);

@@ -1,19 +1,15 @@
 "use client"
-import { getUserCoordinates } from "@/services/location.service";
-import { useQuery } from "@tanstack/react-query";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import AddMarker from '../_components/AddMarker';
-import { NearByPlants } from "./NearByPlants";
+import NearByPlants from "./NearByPlants";
 import UserLocationMarker from "./UserLocationMarker";
 
 function MapWrapper() {
-    const liveLocationQuery = useQuery({
-        queryKey: ['liveLovation'],
-        queryFn: getUserCoordinates,
-        refetchInterval: 5000
-    });
-    const coordinates = liveLocationQuery.data instanceof GeolocationPositionError ? undefined : liveLocationQuery.data;
+    const liveLocationQuery = useGeolocation({ watchPosition: true });
+    const coordinates = liveLocationQuery.coordinates === null ? undefined : liveLocationQuery.coordinates;
+    const [lat, lng] = coordinates ? coordinates : [0, 0];
 
     if (liveLocationQuery.isLoading) {
         return (
@@ -41,7 +37,7 @@ function MapWrapper() {
                     />
                     {!!coordinates && <UserLocationMarker coordinates={coordinates} />}
                     
-                    <NearByPlants coordinates={coordinates} />
+                    <NearByPlants lat={lat} lng={lng} />
 
                     <AddMarker />
                 </MapContainer>
