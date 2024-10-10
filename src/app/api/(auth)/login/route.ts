@@ -15,7 +15,6 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             message: "Signin successful",
-            userSession: userSession,
         }, { status: 200 });
     }
     catch (error: any) {

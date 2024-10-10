@@ -4,7 +4,7 @@ import { signUpWithGoogle } from '@/server/oauth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MouseEvent, useEffect } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
@@ -12,15 +12,19 @@ import { Label } from '../../../../components/ui/label';
 import { ToastAction } from '../../../../components/ui/toast';
 import { useToast } from '../../../../components/ui/use-toast';
 import { PasswordInput } from '@/app/(auth)/_components/PasswordInput';
+import { Loader2 } from 'lucide-react';
 
 function LoginForm() {
     const params = useSearchParams();
     const router = useRouter();
+    const [oAuth2State, setOAuth2State] = useState({isLoading: false, isSuccess: false, isError: false});
+    const [loginState, setloginState] = useState({isLoading: false, isSuccess: false, isError: false});
     const { toast } = useToast();
     const form = useForm<LoginFormType>({ resolver: zodResolver(loginSchema) });
     const { formState: { errors } } = form;
     
     const onSubmit = async (values: LoginFormType) => {
+        setloginState({isLoading: true, isSuccess: false, isError: false});
         // Login API
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -33,28 +37,30 @@ function LoginForm() {
         
         // Handle Success
         if (response.ok) {
+            setloginState({isLoading: false, isSuccess: true, isError: false});
             toast({
-                title: "Welcome Back",
-                description: "Happy planting",
+                title: "You're in!",
+                description: "🌿 Ready to add more plants to your garden?",
             });
             router.replace('/map');
             return;
         }
 
         // Handle Error
+        setloginState({isLoading: false, isSuccess: false, isError: true});
         let errorDetails = {};
         switch (response.status) {
             case 401:
                 errorDetails = {
-                    title: "Uh oh! Your credentials are wrong.",
-                    description: data?.error?.message || "Email or password are incorrect",
+                    title: "Login failed",
+                    description: "🍂 Double-check your email or password.",
                 };
                 break;
         
             default:
                 errorDetails = {
                     title: "Uh oh! Something went wrong.",
-                    description: data?.error?.message || "There was a problem with your request.",
+                    description: "🍂 Unable to log you in. Let's try again.",
                 };
                 break;
         }
@@ -66,10 +72,13 @@ function LoginForm() {
 
     const handleGoogleLogin = async (event: MouseEvent) => {
         try {
+            setOAuth2State({isLoading: true, isSuccess: false, isError: false});
             event.preventDefault();
             await signUpWithGoogle();
+            setOAuth2State({isLoading: false, isSuccess: true, isError: false});
         } catch (error) {
             console.log('handleGoogleLogin error', error);
+            setOAuth2State({isLoading: false, isSuccess: false, isError: true});
         }
     }
 
@@ -133,10 +142,12 @@ function LoginForm() {
                         <PasswordInput id="password" type="password" placeholder="******" tabIndex={2} {...form.register("password")} />
                         {errors.password && <p className='text-sm text-red-600'>{errors.password.message}</p>}
                     </div>
-                    <Button type="submit" className="w-full" tabIndex={3}>
+                    <Button type="submit" disabled={loginState.isLoading || oAuth2State.isLoading} className="w-full" tabIndex={3}>
+                        {loginState.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Login
                     </Button>
-                    <Button variant="outline" className="w-full" tabIndex={4} onClick={handleGoogleLogin}>
+                    <Button variant="outline" disabled={oAuth2State.isLoading || loginState.isLoading} className="w-full" tabIndex={4} onClick={handleGoogleLogin}>
+                        {oAuth2State.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Login with Google
                     </Button>
                 </div>

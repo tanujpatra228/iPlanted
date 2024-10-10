@@ -59,22 +59,22 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
         // Show tost message on mutation change
         if (addPlantMutation.isPending) {
             toast({
-                title: "Planting...",
-                description: "Saving Plant Info",
+                title: "Almost there",
+                description: "🌳 Your plant is being added!",
             });
         } else if (addPlantMutation.isSuccess) {
             toast({
                 variant: "success",
-                title: "Plantd",
-                description: "Thank You!",
+                title: "Great job!",
+                description: "🌱 Keep growing your green collection.",
             });
             queryClient.refetchQueries({ queryKey: ['nearByPlants'] });
             onSubmitCompleted();
         } else if (addPlantMutation.isError) {
             toast({
                 variant: "destructive",
-                title: "Failed",
-                description: "Something went wrong, Please try again",
+                title: "Something went wrong.",
+                description: "🍁 Let's try planting that again.",
             });
         }
     }, [addPlantMutation.isPending, addPlantMutation.isSuccess, addPlantMutation.isError]);
@@ -103,7 +103,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div>
                         <label htmlFor="image" className={`block w-full h-40 ${!!form.formState.errors?.image ? 'bg-destructive' : ''} bg-slate-200 rounded-md`}>
-                            <img src="" alt="Upload Plant Image" className="w-full h-full object-cover flex justify-center items-center" ref={imagePreviewRef} />
+                            <img src="" alt="Upload Plant Image" className=" w-full h-full object-cover flex justify-center items-center invisible opacity-0 transition duration-300 ease-in-out" ref={imagePreviewRef} style={{ visibility: imagePreviewRef.current?.src ? 'visible' : 'hidden', opacity: imagePreviewRef.current?.src ? 1 : 0 }}/>
                             <input
                                 type="file"
                                 name="image"
@@ -147,7 +147,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
                         )}
                     />
                     <Button type="submit" disabled={addPlantMutation.isPending}>
-                        {addPlantMutation.isPending ? 'Planting...' : 'Plant'}
+                        {addPlantMutation.isPending ? 'Taking root...' : 'Plant'}
                     </Button>
                 </form>
             </Form>
