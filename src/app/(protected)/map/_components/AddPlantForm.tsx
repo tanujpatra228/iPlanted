@@ -79,9 +79,6 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
         }
     }, [addPlantMutation.isPending, addPlantMutation.isSuccess, addPlantMutation.isError]);
 
-    console.log('form.formState.errors.image', form.formState.errors?.image?.message);
-    
-
     if(!isAuth){
         return (
             <div className={cn("p-4 h-full flex justify-center items-center", className)} {...rest}>
