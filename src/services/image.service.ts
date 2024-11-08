@@ -11,7 +11,7 @@ export async function uploadImage(file: Buffer): Promise<string> {
         const response = await new Promise<string>((resolve, rejects) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
-                    folder: 'iplanted',
+                    folder: 'iplanted/plants',
                     format: 'webp',
                     transformation: {
                         width: 700,

@@ -5,13 +5,13 @@ import { Icon, LatLngTuple } from "leaflet";
 import Image from "next/image";
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
-import plantIconSvg from "/public/plant-icon.svg";
 
 const plantIcon = new Icon({
-    iconUrl: plantIconSvg.src,
+    iconUrl: 'https://res.cloudinary.com/dopcbgrcs/image/upload/w_50/h_63/f_auto/plant-icon_o1kscz.svg',
     iconSize: [50, 50],
     iconAnchor: [25,50],
-    popupAnchor: [0, -25]
+    popupAnchor: [0, -25],
+    className: 'object-contain'
 });
 
 function NearByPlants({ lat, lng }: { lat: number, lng: number }) {

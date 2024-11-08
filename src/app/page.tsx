@@ -3,8 +3,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { LeafIcon } from "lucide-react";
 import Image from "next/image";
-import greenerFuture from "../../public/grow-a-greener-future.jpg";
-import interactiveMap from "../../public/interactive-map.jpg";
 
 export default function Home() {
   return (
@@ -53,16 +51,18 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <Image
-                src={greenerFuture}
-                width={550}
-                height={550}
-                alt="Greener Future"
-                quality={80}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYGBgYHBwYJCgkKCQ0MCwsMDRQODw4PDhQfExYTExYTHxshGxkbIRsxJiIiJjE4Ly0vOEQ9PURWUVZwcJYBBgYGBgYGBgcHBgkKCQoJDQwLCwwNFA4PDg8OFB8TFhMTFhMfGyEbGRshGzEmIiImMTgvLS84RD09RFZRVnBwlv/CABEIAAUABQMBEQACEQEDEQH/xAAUAAEAAAAAAAAAAAAAAAAAAAAG/9oACAEBAAAAAAH/xAAUAQEAAAAAAAAAAAAAAAAAAAAF/9oACAECEAAAABf/xAAUAQEAAAAAAAAAAAAAAAAAAAAE/9oACAEDEAAAAEf/xAAcEAACAgIDAAAAAAAAAAAAAAACAwQFASEAETH/2gAIAQEAAT8AgWl04HRoFocEI7iwWFDphF6XWuf/xAAbEQACAgMBAAAAAAAAAAAAAAABAwIEABESE//aAAgBAgEBPwC3Yj3FjVehYNgGRHOf/8QAGhEAAgIDAAAAAAAAAAAAAAAAAgMBEgARgf/aAAgBAwEBPwBJEoaLKsR3ef/Z"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last shadow-2xl"
-              />
+              <div>
+                <Image
+                  src={'https://res.cloudinary.com/dopcbgrcs/image/upload/w_550/f_auto/grow-a-greener-future_nkyqcw.jpg'}
+                  width={550}
+                  height={550}
+                  alt="Greener Future"
+                  quality={80}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYGBgYHBwYJCgkKCQ0MCwsMDRQODw4PDhQfExYTExYTHxshGxkbIRsxJiIiJjE4Ly0vOEQ9PURWUVZwcJYBBgYGBgYGBgcHBgkKCQoJDQwLCwwNFA4PDg8OFB8TFhMTFhMfGyEbGRshGzEmIiImMTgvLS84RD09RFZRVnBwlv/CABEIAAUABQMBEQACEQEDEQH/xAAUAAEAAAAAAAAAAAAAAAAAAAAG/9oACAEBAAAAAAH/xAAUAQEAAAAAAAAAAAAAAAAAAAAF/9oACAECEAAAABf/xAAUAQEAAAAAAAAAAAAAAAAAAAAE/9oACAEDEAAAAEf/xAAcEAACAgIDAAAAAAAAAAAAAAACAwQFASEAETH/2gAIAQEAAT8AgWl04HRoFocEI7iwWFDphF6XWuf/xAAbEQACAgMBAAAAAAAAAAAAAAABAwIEABESE//aAAgBAgEBPwC3Yj3FjVehYNgGRHOf/8QAGhEAAgIDAAAAAAAAAAAAAAAAAgMBEgARgf/aAAgBAwEBPwBJEoaLKsR3ef/Z"
+                  className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last shadow-2xl"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -127,11 +127,10 @@ export default function Home() {
                 </Link>
               </div>
               <Image
-                src={interactiveMap}
+                src={'https://res.cloudinary.com/dopcbgrcs/image/upload/q_100/f_auto/interactive-map_bpepox.jpg'}
                 width="550"
                 height="310"
                 quality={80}
-                placeholder="blur"
                 alt="Interactive Map"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full shadow-2xl"
               />
