@@ -1,5 +1,5 @@
 import { config } from "@/appwrite/config";
-import { SESSION_KEY } from "@/helpers";
+import { SESSION_KEY } from "@/consts";
 import { deleteSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import { Client, Account } from "node-appwrite";

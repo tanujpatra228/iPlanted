@@ -8,6 +8,7 @@ export async function addNewPlant(values: AddPlantFormType): Promise<AddNewPlant
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('image', values.image);
+        if (values?.plantType) formData.append('plantType', values.plantType);
         if (values?.notes) formData.append('notes', values?.notes);
         formData.append('coordinates', JSON.stringify(values.coordinates));
 

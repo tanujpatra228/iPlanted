@@ -14,6 +14,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addNewPlant } from "@/services/plant.services";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
+import { PLANT_TYPE } from "@/consts";
+import { getPlantTypeLabel } from "@/helpers";
 
 function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPlantFormPropsType) {
     const imageFieldRef = useRef<HTMLInputElement>(null);
@@ -31,6 +34,7 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
             coordinates: { lat: position.lat, lng: position.lng },
             image: null,
             notes: "",
+            plantType: 'Outdoor',
         },
     });
 
@@ -129,6 +133,32 @@ function AddPlantForm({ position, className, onSubmitCompleted, ...rest }: AddPl
                                 <FormControl>
                                     <Input placeholder="Plant Name" {...field} />
                                 </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="plantType"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Type</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={`${field.value}`}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder={'Outdoor'} />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className="z-[1000]">
+                                        {
+                                            Object.values(PLANT_TYPE).map((type) => {
+                                                return (
+                                                    <SelectItem key={type.code} value={`${type.label}`}>{type.label}</SelectItem>
+                                                )
+                                            })
+                                        }
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}

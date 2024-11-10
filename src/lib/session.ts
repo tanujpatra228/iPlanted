@@ -1,4 +1,4 @@
-import { SESSION_KEY } from "@/helpers";
+import { SESSION_KEY } from "@/consts";
 import { cookies } from "next/headers";
 import { Models } from "node-appwrite";
 

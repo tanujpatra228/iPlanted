@@ -15,6 +15,9 @@ const PlantSchema: Schema<PlantType> = new Schema({
         type: String,
         trim: true
     },
+    plantType: {
+        type: Number,
+    },
     location: {
         type: {
             type: String,
@@ -39,6 +42,7 @@ export type PlantType = Document & {
     plantedBy: string;
     image: string;
     notes: string;
+    plantType: number;
     location: {
         type: string;
         coordinates: [number, number]; // [longitude, latitude]

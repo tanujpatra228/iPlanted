@@ -1,7 +1,9 @@
+import { PLANT_TYPE } from "@/consts";
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const PLANT_TYPE_CODES = Object.values(PLANT_TYPE).map((type) => type.code);
 
 export const addNewPlantSchema = z.object({
     title: z.string().min(2).max(50),
@@ -18,5 +20,6 @@ export const addNewPlantSchema = z.object({
         lng: z.number().min(-180).max(180),
     }),
     notes: z.string().optional(),
+    plantType: z.string().optional(),
 });
 export type AddPlantFormType = z.infer<typeof addNewPlantSchema>;

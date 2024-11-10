@@ -1,4 +1,5 @@
 import { createSessionClient } from "@/appwrite/appwrite";
+import { getPlantTypeCode } from "@/helpers";
 import dbConnect from "@/lib/dbConnect";
 import Plant from "@/model/Plant";
 import { uploadImage } from "@/services/image.service";
@@ -7,11 +8,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
+        console.log('formData', formData);
+        
         const title = formData.get('title') as string;
         const coordinatesJson = formData.get('coordinates') as string;
         const coordinates = JSON.parse(coordinatesJson);
         const imageFile = formData.get('image') as Blob;
         const notes = formData.get('notes') as string;
+        const plantType = formData.get('plantType') as string;
         
         if (!title || !coordinates) return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
 
@@ -24,12 +28,16 @@ export async function POST(request: NextRequest) {
 
         const imageUrl = await uploadImage(fileBuffer);
 
+        console.log('plantType', getPlantTypeCode(plantType));
+        
+
         await dbConnect();
         const plant = new Plant({
             title: title,
             plantedBy: user.$id,
             image: imageUrl,
             notes: notes,
+            plantType: getPlantTypeCode(plantType),
             location: {
                 type: 'Point',
                 coordinates: [coordinates?.lng, coordinates?.lat]

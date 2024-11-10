@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { SESSION_KEY } from './helpers';
+import { SESSION_KEY } from './consts';
 
 export function middleware(request: NextRequest) {
     if (request.method === 'POST') {
